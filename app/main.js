@@ -7,6 +7,10 @@ const util = require("util");
 function decodeBencode(bencodedValue) {
   // Check if the first character is a digit
   if (!isNaN(bencodedValue[0])) {
+    if(bencodedValue[0]=='i'&&bencodedValue[bencodedValue.length-1]=='e')
+      {
+        return Number(bencodedValue.substr(1,bencodedValue.length-2));
+      }
     const firstColonIndex = bencodedValue.indexOf(":");
     if (firstColonIndex === -1) {
       throw new Error("Invalid encoded value");
