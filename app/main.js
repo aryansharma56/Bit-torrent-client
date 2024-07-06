@@ -1,5 +1,5 @@
 function decodeBencode(bencodedValue) {
-
+  if(bencodedValue[0]==='l'&&bencodedValue[1]==='e') return [];
   if(bencodedValue[0] === "l" && bencodedValue[bencodedValue.length - 1] === "e") {
 
     const list = [];
