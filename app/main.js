@@ -1,76 +1,70 @@
 function decodeBencode(bencodedValue) {
 
-  if (bencodedValue.length >= 3 && bencodedValue[0] === "i" && bencodedValue[bencodedValue.length - 1] === "e") {
-
-      return parseInt(bencodedValue.substr(1, bencodedValue.length - 2), 10);
-
-      
-
-  }
-
   if(bencodedValue[0] === "l" && bencodedValue[bencodedValue.length - 1] === "e") {
 
-      if(bencodedValue.length === 2) {
+    const list = [];
 
-          return [];
+    let i = 1;
+
+    const lastIndex = bencodedValue.length - 1;
+
+    while(i < lastIndex) {
+
+      const value = bencodedValue[i];
+
+      if(value === "i") {
+
+        // get first index of e
+
+        const end = bencodedValue.indexOf("e", i);
+
+        list.push(parseInt(bencodedValue.substring(i+1, end)));
+
+        i = end + 1;
+
+      } else if(!isNaN(value)) {
+
+        const parts = bencodedValue.substring(i).split(":");
+
+        const length = parseInt(parts[0], 10);
+
+        list.push(parts[1].substr(0, length));
+
+        i += parts[0].length + length+1;
+
+      } else if(value === "l") {
+
+        // get last e
+
+        const end = bencodedValue.length - 1;
+
+        list.push(decodeBencode(bencodedValue.substring(i, end)));
+
+        i = end + 1;
 
       }
 
-      if(bencodedValue[1] ==="l" && bencodedValue[2] ==="i"  && bencodedValue[bencodedValue.length - 2] === "e") {
+    }
 
-          const parts = bencodedValue.split(":");
-
-          const string_length = parseInt(parts[0].substr(parts[0].length-1,parts[0].length-1),10);
-
-          const string_text = parts[1].substr(0,string_length);
-
-          const number_text=parseInt(parts[0].substr(3,parts[0].length-3),10);
-
-          const list = [];
-
-          list.push(number_text);
-
-          list.push(string_text);
-
-          const return_list=[];
-
-          return_list.push(list)
-
-          return return_list;
-
-      }
-
-      const parts = bencodedValue.split(":");
-
-      const string_length = parseInt(parts[0].substr(1,1),10);
-
-      const string_text = parts[1].substr(0,string_length);
-
-      const number_text=parseInt(parts[1].substr(string_length+1,parts[1].length-3),10);
-
-      const list = [];
-
-      list.push(string_text);
-
-      list.push(number_text);
-
-      return list;
+    return list;
 
   }
 
   if (!isNaN(bencodedValue[0])) {
 
-      // Check if the first character is a digit
+    // Check if the first character is a digit
 
-      const parts = bencodedValue.split(":");
+    const parts = bencodedValue.split(":");
 
-      const length = parseInt(parts[0], 10);
+    const length = parseInt(parts[0], 10);
 
-      return parts[1].substr(0, length);
+    return parts[1].substr(0, length);
 
   } else {
 
-      throw new Error("Only strings are supported at the moment");
+    const output = bencodedValue.replace(/[ie]+/g, "");
+
+    return parseInt(output);
 
   }
 
@@ -88,20 +82,21 @@ function main() {
 
   if (command === "decode") {
 
-      const bencodedValue = process.argv[3];
+    const bencodedValue = process.argv[3];
 
-      // In JavaScript, there's no need to manually convert bytes to string for printing
+  
 
-      // because JS doesn't distinguish between bytes and strings in the same way Python does.
+    // In JavaScript, there's no need to manually convert bytes to string for printing
 
-      console.log(JSON.stringify(decodeBencode(bencodedValue)));
+    // because JS doesn't distinguish between bytes and strings in the same way Python does.
+
+    console.log(JSON.stringify(decodeBencode(bencodedValue)));
 
   } else {
 
-      throw new Error(`Unknown command ${command}`);
+    throw new Error(`Unknown command ${command}`);
 
   }
 
 }
 
-main();
