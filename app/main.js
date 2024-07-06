@@ -45,7 +45,7 @@ function decodeBencode(bencodedValue) {
       {
         let list=[]
         let i=1;
-       while(i<bencodedValue.length-1)
+       while(bencodedValue[i]!=='e')
           {
             if(!isNaN(bencodedValue[i]))
               {
@@ -63,7 +63,7 @@ function decodeBencode(bencodedValue) {
             }
             else if(bencodedValue[i]==='l')
               {
-                const end =bencodedValue.length-1;
+                let end =bencodedValue.length-1;
                 list.push(decodeBencode(bencodedValue.substring(i, end)))
                 i=end+1;
               }
