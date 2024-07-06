@@ -74,7 +74,7 @@ function decode(bencodedValue)
 }
 function decodeBencode(bencodedValue) {
     const decodedVal=decode(bencodedValue);
-    return decodedVal.list;
+    return decodedVal.list||decodedVal;
 }
 
 function main() {
