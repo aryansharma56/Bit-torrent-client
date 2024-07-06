@@ -52,7 +52,7 @@ function decodeBencode(bencodedValue) {
                 const parts=bencodedValue.substr(i).split(':');
                 const length=parseInt(parts[0]);
                 const index=bencodedValue.indexOf(":");
-                list.push(bencodedValue.substr(index,length));
+                list.push(bencodedValue.substr(index+1,length));
                 i+=parts[0].length+length+1;
               }
             else if(bencodedValue[i]==='i')
