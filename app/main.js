@@ -53,12 +53,12 @@ function decodeBencode(bencodedValue) {
                 const length=parseInt(parts[0]);
                 const index=bencodedValue.indexOf(":");
                 list.push(bencodedValue.substr(index,length));
-                i=parts[0].length+length+1;
+                i+=parts[0].length+length+1;
               }
             else if(bencodedValue[i]==='i')
             {
               const index=bencodedValue.indexOf('e',i);
-              list.push(Number(bencodedValue.substr(i+1,index-i+1)));
+              list.push(Number(bencodedValue.substring(i+1,index)));
               i=index+1;
             }
             
