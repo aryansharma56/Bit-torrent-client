@@ -45,7 +45,7 @@ function decodeBencode(bencodedValue) {
       {
         let list=[]
         let i=1;
-       while(bencodedValue[i]!=='e')
+       while(bencodedValue[i]!=='e'&&i<bencodedValue.length)
           {
             if(!isNaN(bencodedValue[i]))
               {
