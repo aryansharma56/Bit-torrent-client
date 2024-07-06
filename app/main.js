@@ -90,7 +90,7 @@ function main() {
 
     // because JS doesn't distinguish between bytes and strings in the same way Python does.
 
-    console.log(JSON.stringify(decodeBencode(bencodedValue)));
+    console.log(decodeBencode(bencodedValue));
 
   } else {
 
