@@ -1,9 +1,3 @@
-const process = require("process");
-const util = require("util");
-
-// Examples:
-// - decodeBencode("5:hello") -> "hello"
-// - decodeBencode("10:hello12345") -> "hello12345"
 function decodeBencodeString(bencodedValue)
 {
   if (!isNaN(bencodedValue[0])) {
@@ -27,8 +21,9 @@ function decodeBencodedIntegers(bencodedValue)
     throw new Error("Invalid encoded value");
   }
 }
-function decodeBencode(bencodedValue) {
-  // Check if the first character is a digit
+function decode(bencodedValue)
+{
+    // Check if the first character is a digit
   if (!isNaN(bencodedValue[0])) {
     
     const firstColonIndex = bencodedValue.indexOf(":");
@@ -64,14 +59,22 @@ function decodeBencode(bencodedValue) {
             else if(bencodedValue[i]==='l')
               {
                 let end =bencodedValue.length-1;
-                list.push(decodeBencode(bencodedValue.substring(i, end)))
-                i=end+1;
+                const val=decode(bencodedValue.substring(i, end));
+                // console.log("the returned value is ",val);
+                list.push(val.list);
+                i+=val.i+i
               }
+            // console.log(i,list)
           }
-          return list;
+          return {list,i};
       }
     throw new Error("Only strings are supported at the moment");
   }
+
+}
+function decodeBencode(bencodedValue) {
+    const decodedVal=decode(bencodedValue);
+    return decodedVal.list;
 }
 
 function main() {
