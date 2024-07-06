@@ -61,7 +61,12 @@ function decodeBencode(bencodedValue) {
               list.push(Number(bencodedValue.substring(i+1,index)));
               i=index+1;
             }
-            
+            else if(bencodedValue[i]==='l')
+              {
+                const end =bencodedValue.length-1;
+                list.push(bencodedValue.substring(i, end))
+                i=end+1;
+              }
           }
           return list;
       }
