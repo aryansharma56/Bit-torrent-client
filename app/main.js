@@ -59,6 +59,7 @@ function decodeBencode(bencodedValue) {
             {
               const index=bencodedValue.indexOf('e',i);
               list.push(Number(bencodedValue.substr(i+1,index-i+1)));
+              i=index+1;
             }
             
           }
