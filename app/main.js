@@ -62,6 +62,7 @@ function decodeBencode(bencodedValue) {
             }
             
           }
+          return list;
       }
     throw new Error("Only strings are supported at the moment");
   }
