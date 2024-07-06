@@ -64,7 +64,7 @@ function decodeBencode(bencodedValue) {
             else if(bencodedValue[i]==='l')
               {
                 const end =bencodedValue.length-1;
-                list.push(bencodedValue.substring(i, end))
+                list.push(decodeBencode(bencodedValue.substring(i, end)))
                 i=end+1;
               }
           }
