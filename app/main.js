@@ -47,7 +47,7 @@ function decodeBencode(bencodedValue) {
         let i=1;
        while(i<bencodedValue.length-1)
           {
-            if(!NaN(bencodedValue(0)))
+            if(!NaN(bencodedValue[i]))
               {
                 const parts=bencodedValue.substr(i).split(':');
                 const length=parseInt(parts[0]);
