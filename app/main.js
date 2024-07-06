@@ -4,6 +4,29 @@ const util = require("util");
 // Examples:
 // - decodeBencode("5:hello") -> "hello"
 // - decodeBencode("10:hello12345") -> "hello12345"
+function decodeBencodeString(bencodedValue)
+{
+  if (!isNaN(bencodedValue[0])) {
+    
+    const firstColonIndex = bencodedValue.indexOf(":");
+    if (firstColonIndex === -1) {
+      throw new Error("Invalid encoded value");
+    }
+    return bencodedValue.substr(firstColonIndex + 1);
+  } else {
+    throw new Error("Only strings are supported at the moment");
+  }
+}
+function decodeBencodedIntegers(bencodedValue)
+{
+  if(bencodedValue[0]=='i'&&bencodedValue[bencodedValue.length-1]=='e')
+    {
+      return Number(bencodedValue.substr(1,bencodedValue.length-2));
+    }
+  else{
+    throw new Error("Invalid encoded value");
+  }
+}
 function decodeBencode(bencodedValue) {
   // Check if the first character is a digit
   if (!isNaN(bencodedValue[0])) {
@@ -17,6 +40,28 @@ function decodeBencode(bencodedValue) {
     if(bencodedValue[0]=='i'&&bencodedValue[bencodedValue.length-1]=='e')
       {
         return Number(bencodedValue.substr(1,bencodedValue.length-2));
+      }
+    else if(bencodedValue[0]==='l'&&bencodedValue[bencodedValue.length-1]==='e')
+      {
+        let list=[]
+        let i=1;
+       while(i<bencodedValue.length-1)
+          {
+            if(!NaN(bencodedValue(0)))
+              {
+                const parts=bencodedValue.substr(i).split(':');
+                const length=parseInt(parts[0]);
+                const index=bencodedValue.indexOf(":");
+                list.push(bencodedValue.substr(index,length));
+                i=parts[0].length+length+1;
+              }
+            else if(bencodedValue[i]==='i')
+            {
+              const index=bencodedValue.indexOf('e',i);
+              list.push(Number(bencodedValue.substr(i+1,index-i+1)));
+            }
+            
+          }
       }
     throw new Error("Only strings are supported at the moment");
   }
