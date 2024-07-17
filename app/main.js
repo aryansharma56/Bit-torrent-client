@@ -68,13 +68,38 @@ function decode(bencodedValue)
           }
           return {list,i};
       }
+      else if(bencodedValue[0]=='d'&&bencodedValue[bencodedValue.length-1]=='e')
+      {
+
+      }
     throw new Error("Only strings are supported at the moment");
   }
 
 }
 function decodeBencode(bencodedValue) {
+    if (bencodedValue[0] === 'd') {
+      const dict={};
+      bencodedValue[0]='l';
+      const val=decode(bencodedValue);
+      for(let i=0;i<val.list;i+=2)
+      {
+        const key=val.list[i];
+        const value=val.list[i+1];
+        dict[key]=value;
+      }
+      let keys = Object.keys(dict);
+
+      keys.sort();
+      const sorted_dict={}
+      for (var i=0; i<keys.length; i++) { 
+      let key = keys[i];
+      let value = dict[key];
+      sorted_dict[key]=value;
+      return sorted_dict;
+    }
     const decodedVal=decode(bencodedValue);
     return decodedVal.list||decodedVal;
+  }
 }
 
 function main() {
