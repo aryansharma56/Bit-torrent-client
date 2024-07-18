@@ -178,7 +178,7 @@ function decodeBencode(bencodedString) {
     }
   return parse();
 }
-function main() {
+async function  main() {
   const command = process.argv[2];
 
   // You can use print statements as follows for debugging, they'll be visible when running tests.
@@ -191,7 +191,14 @@ function main() {
     // In JavaScript, there's no need to manually convert bytes to string for printing
     // because JS doesn't distinguish between bytes and strings in the same way Python does.
     console.log(JSON.stringify(decodeBencode(bencodedValue)));
-  } else {
+  }
+  else if(command==="info"){
+   const fileName = process.argv[3];
+   const response = await fetch(`../${fileName}`);
+   const bencodedValue=await response.text();
+   console.log(bencodedValue);
+  }
+  else {
     throw new Error(`Unknown command ${command}`);
   }
 }
