@@ -24,7 +24,7 @@ function decodeBencodedIntegers(bencodedValue)
 function decode(bencodedValue)
 {
     // Check if the first character is a digit
-    console.log(bencodedValue)
+    // console.log(bencodedValue)
   if (!isNaN(bencodedValue[0])) {
     
     const firstColonIndex = bencodedValue.indexOf(":");
