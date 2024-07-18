@@ -80,8 +80,8 @@ function decode(bencodedValue)
 function decodeBencode(bencodedValue) {
     if (bencodedValue[0] === 'd') {
       const dict={};
-      bencodedValue[0]='l';
-      const val=decode(bencodedValue);
+      let new_string ='l'+ bencodedValue.slice(1);
+      const val=decode(new_string);
       for(let i=0;i<val.list;i+=2)
       {
         const key=val.list[i];
