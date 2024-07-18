@@ -96,11 +96,12 @@ function decodeBencode(bencodedValue) {
       let key = keys[i];
       let value = dict[key];
       sorted_dict[key]=value;
+     }
       return sorted_dict;
+
     }
     const decodedVal=decode(bencodedValue);
     return decodedVal.list||decodedVal;
-  }
 }
 
 function main() {
