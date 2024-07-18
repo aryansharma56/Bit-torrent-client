@@ -176,6 +176,7 @@ function decodeBencode(bencodedString) {
             return dict;
         }
     }
+  return parse();
 }
 function main() {
   const command = process.argv[2];
