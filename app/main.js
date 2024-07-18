@@ -104,7 +104,8 @@
 //     return decodedVal.list||decodedVal;
 // }
 const process = require("process");
-
+const fs = require('fs');
+const path = require('path');
 const util = require("util");
 
 function decodeBencode(bencodedString) {
@@ -194,9 +195,14 @@ async function  main() {
   }
   else if(command==="info"){
    const fileName = process.argv[3];
-   const response = await fetch(`../${fileName}`);
-   const bencodedValue=await response.text();
-   console.log(bencodedValue);
+   const filePath = path.resolve(__dirname,"..", fileName);
+   const bencodedValue= fs.readFileSync(filePath,{ encoding: 'utf8' });
+   const decodedValue=decodeBencode(bencodedValue);
+   console.log("Tracker URL: ",decodedValue.announce);
+   console.log("Length: ",decodedValue.info.length)
+  //  const response = await fetch(`../${fileName}`);
+  //  const bencodedValue=await response.text();
+   
   }
   else {
     throw new Error(`Unknown command ${command}`);
