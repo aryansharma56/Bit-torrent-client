@@ -107,7 +107,7 @@ const process = require("process");
 const fs = require('fs');
 const path = require('path');
 const util = require("util");
-
+const crypto= require('crypto')
 function decodeBencode(bencodedString) {
 
     let position = 0;
@@ -179,7 +179,7 @@ function decodeBencode(bencodedString) {
     }
   return parse();
 }
-function printTorrentInfo(torrentInfo) {
+function printTorrentInfo(torrentInfo,bencodedInfoValue) {
 
   const trackerUrl = torrentInfo.announce;
 
@@ -188,7 +188,29 @@ function printTorrentInfo(torrentInfo) {
   console.log(`Tracker URL: ${trackerUrl}`);
 
   console.log(`Length: ${fileLength}`);
+  console.log(`Info Hash: ${bencodedInfoValue}`);
 
+}
+function findSHA(bencodedValue){
+  const sha1Hash = crypto.createHash("sha1");
+  sha1Hash.update(bencodedValue);
+  return sha1Hash.digest("hex");
+}
+function bencode(dict)
+{
+  let bencodedString="d";
+  for (const [key,value] of Object.entries(dict)) {
+      bencodedString=bencodedString+key.length+':'+key;
+      if(isNaN(value))
+      {
+        bencodedString=bencodedString+value.length+':'+value;
+      }
+      else{
+        bencodedString=bencodedString+':i'+value+'e';
+      }
+  }
+  bencodedString=bencodedString+'e';
+  return bencodedString;
 }
 async function  main() {
   const command = process.argv[2];
@@ -209,12 +231,11 @@ async function  main() {
    const filePath = path.resolve(__dirname,"..", fileName);
    const bencodedValue= fs.readFileSync(path.resolve('.', fileName),  { encoding: 'ascii', flag: 'r' }).trim();
    const decodedValue=decodeBencode(bencodedValue);
-   printTorrentInfo(decodedValue);
-  //  console.log("Tracker URL: ",decodedValue.announce);
-  //  console.log("Length: ",decodedValue.info.length)
-  //  const response = await fetch(`../${fileName}`);
-  //  const bencodedValue=await response.text();
-   
+   console.log(decodedValue);
+   const bencodedInfoValue=bencode(decodedValue.info)
+   const sha=findSHA(bencodedInfoValue);
+   printTorrentInfo(decodedValue,sha);
+  
   }
   else {
     throw new Error(`Unknown command ${command}`);
