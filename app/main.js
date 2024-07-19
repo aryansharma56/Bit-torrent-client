@@ -179,6 +179,17 @@ function decodeBencode(bencodedString) {
     }
   return parse();
 }
+function printTorrentInfo(torrentInfo) {
+
+  const trackerUrl = torrentInfo.announce;
+
+  const fileLength = torrentInfo.info.length;
+
+  console.log(`Tracker URL: ${trackerUrl}`);
+
+  console.log(`Length: ${fileLength}`);
+
+}
 async function  main() {
   const command = process.argv[2];
 
@@ -198,7 +209,8 @@ async function  main() {
    const filePath = path.resolve(__dirname,"..", fileName);
    const bencodedValue= fs.readFileSync(path.resolve('.', fileName),  { encoding: 'ascii', flag: 'r' }).trim();
    const decodedValue=decodeBencode(bencodedValue);
-   console.log("Tracker URL: ",decodedValue.announce);
+   printTorrentInfo(decodedValue);
+  //  console.log("Tracker URL: ",decodedValue.announce);
   //  console.log("Length: ",decodedValue.info.length)
   //  const response = await fetch(`../${fileName}`);
   //  const bencodedValue=await response.text();
