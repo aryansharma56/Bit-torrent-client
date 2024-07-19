@@ -231,7 +231,7 @@ async function  main() {
    const filePath = path.resolve(__dirname,"..", fileName);
    const bencodedValue= fs.readFileSync(path.resolve('.', fileName),  { encoding: 'ascii', flag: 'r' }).trim();
    const decodedValue=decodeBencode(bencodedValue);
-   console.log(decodedValue);
+  //  console.log(decodedValue);
    const bencodedInfoValue=bencode(decodedValue.info)
    const sha=findSHA(bencodedInfoValue);
    printTorrentInfo(decodedValue,sha);
