@@ -196,21 +196,31 @@ function findSHA(bencodedValue){
   sha1Hash.update(bencodedValue);
   return sha1Hash.digest("hex");
 }
-function bencode(dict)
+function bencode(input)
 {
-  let bencodedString="d";
-  for (const [key,value] of Object.entries(dict)) {
-      bencodedString=bencodedString+key.length+':'+key;
-      if(isNaN(value))
-      {
-        bencodedString=bencodedString+value.length+':'+value;
-      }
-      else{
-        bencodedString=bencodedString+':i'+value+'e';
-      }
+  let bencodedString="";
+  if(Number.isFinite(input))
+  {
+    return `i${input}e`;
   }
-  bencodedString=bencodedString+'e';
-  return bencodedString;
+  else if(typeof input === "string")
+  {
+    return `${input.length}:${input}`
+  }
+  else if (Array.isArray(input)) {
+
+    return `l${input.map((i) => bencode(i)).join("")}e`;
+  }
+  else {
+
+    const d = Object.entries(input)
+    .sort(([k1], [k2]) => k1.localeCompare(k2))
+    .map(([k, v]) => `${bencode(k)}${bencode(v)}`);
+
+    return `d${d.join("")}e`;
+  } 
+    
+  // return bencodedString;
 }
 async function  main() {
   const command = process.argv[2];
@@ -231,8 +241,8 @@ async function  main() {
    const filePath = path.resolve(__dirname,"..", fileName);
    const bencodedValue= fs.readFileSync(path.resolve('.', fileName),  { encoding: 'ascii', flag: 'r' }).trim();
    const decodedValue=decodeBencode(bencodedValue);
-  //  console.log(decodedValue);
    const bencodedInfoValue=bencode(decodedValue.info)
+   console.log(bencodedInfoValue);
    const sha=findSHA(bencodedInfoValue);
    printTorrentInfo(decodedValue,sha);
   
