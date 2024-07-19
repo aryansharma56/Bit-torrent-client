@@ -199,7 +199,7 @@ async function  main() {
    const bencodedValue= fs.readFileSync(path.resolve('.', fileName),  { encoding: 'ascii', flag: 'r' }).trim();
    const decodedValue=decodeBencode(bencodedValue);
    console.log("Tracker URL: ",decodedValue.announce);
-   console.log("Length: ",decodedValue.info.length)
+  //  console.log("Length: ",decodedValue.info.length)
   //  const response = await fetch(`../${fileName}`);
   //  const bencodedValue=await response.text();
    
