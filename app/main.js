@@ -205,9 +205,7 @@ function bencode(input)
   }
   else if(typeof input === "string")
   {
-    const s = Buffer.from(input, "binary");
-
-    return `${s.length}:` + s.toString("binary");
+    return `${input.length}:${input}`
   }
   else if (Array.isArray(input)) {
 
