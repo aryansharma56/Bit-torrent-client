@@ -259,9 +259,9 @@ async function  main() {
    const fileName = process.argv[3];
    const filePath = path.resolve(__dirname,"..", fileName);
    const bencodedValue= fs.readFileSync(path.resolve('.', fileName));
-   console.log(bencodedValue);
+  //  console.log(bencodedValue);
    const decodedValue=decodeBencode(bencodedValue.toString("binary"));
-   console.log(decodedValue.info);
+  //  console.log(decodedValue.info);
    const bencodedInfoValue=bencode(decodedValue.info)
   //  console.log(bencodedInfoValue);
   const tmpBuff = Buffer.from(bencodedInfoValue, "binary");
