@@ -209,7 +209,7 @@ function printTorrentInfo(torrentInfo,bencodedInfoValue) {
 
   // console.log(pieces);
 
-}
+
 function findSHA(bencodedValue){
   const sha1Hash = crypto.createHash("sha1");
   sha1Hash.update(bencodedValue);
