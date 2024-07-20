@@ -130,7 +130,7 @@ function decodeBencode(bencodedString) {
 
             const colon = bencodedString.indexOf(':', position);
 
-            const length = parseInt(bencodedString.substring(position, colon));
+            const length = parseInt(bencodedString.substr(position, colon));
             const a = new Uint8Array(Buffer.from(bencodedString, "binary"));
             const outS = Buffer.from(
 
@@ -244,8 +244,9 @@ async function  main() {
   else if(command==="info"){
    const fileName = process.argv[3];
    const filePath = path.resolve(__dirname,"..", fileName);
-   const bencodedValue= fs.readFileSync(path.resolve('.', fileName),  { encoding: 'ascii', flag: 'r' }).trim();
-   const decodedValue=decodeBencode(bencodedValue);
+   const bencodedValue= fs.readFileSync(path.resolve('.', fileName));
+  //  console.log(bencodedValue);
+   const decodedValue=decodeBencode(bencodedValue.toString("binary"));
    const bencodedInfoValue=bencode(decodedValue.info)
   //  console.log(bencodedInfoValue);
   const tmpBuff = Buffer.from(bencodedInfoValue, "binary");
