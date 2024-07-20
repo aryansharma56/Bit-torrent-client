@@ -194,6 +194,20 @@ function printTorrentInfo(torrentInfo,bencodedInfoValue) {
 
   console.log(`Length: ${fileLength}`);
   console.log(`Info Hash: ${bencodedInfoValue}`);
+  console.log(`Piece Length: ${torrentInfo.info["piece length"]}`)
+  console.log("Piece Hashes:")
+  let buffer = Buffer.from(torrentInfo.info.pieces, 'utf16le');
+  for (let i = 0; i < buffer.length; i += 40) {
+    let pieces=[];
+  for (let j = 0; j<40; j++) {
+    if((i+j<buffer.length)&&buffer[i+j]!=0)
+    pieces.push(buffer[i+j].toString(16));
+
+  }
+  console.log(pieces.join(''))
+}
+
+  // console.log(pieces);
 
 }
 function findSHA(bencodedValue){
@@ -245,8 +259,9 @@ async function  main() {
    const fileName = process.argv[3];
    const filePath = path.resolve(__dirname,"..", fileName);
    const bencodedValue= fs.readFileSync(path.resolve('.', fileName));
-  //  console.log(bencodedValue);
+   console.log(bencodedValue);
    const decodedValue=decodeBencode(bencodedValue.toString("binary"));
+   console.log(decodedValue.info);
    const bencodedInfoValue=bencode(decodedValue.info)
   //  console.log(bencodedInfoValue);
   const tmpBuff = Buffer.from(bencodedInfoValue, "binary");
