@@ -196,15 +196,15 @@ function printTorrentInfo(torrentInfo,bencodedInfoValue) {
   console.log(`Info Hash: ${bencodedInfoValue}`);
   console.log(`Piece Length: ${torrentInfo.info["piece length"]}`)
   console.log("Piece Hashes:")
-  let buffer = Buffer.from(torrentInfo.info.pieces, 'utf16le');
-  for (let i = 0; i < buffer.length; i += 40) {
-    let pieces=[];
-  for (let j = 0; j<40; j++) {
-    if((i+j<buffer.length)&&buffer[i+j]!=0)
-    pieces.push(buffer[i+j].toString(16));
+  let buffer = Buffer.from(torrentInfo.info.pieces, 'binary');
+  console.log('Piece Hashes:');
+
+  for (let i = 0; i < buffer.length; i += 20) {
+
+    console.log(buffer.subarray(i, i + 20).toString("hex"));
 
   }
-  console.log(pieces.join(''))
+  // console.log(pieces.join(''))
 }
 
   // console.log(pieces);
