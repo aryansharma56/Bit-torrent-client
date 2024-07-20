@@ -131,7 +131,12 @@ function decodeBencode(bencodedString) {
             const colon = bencodedString.indexOf(':', position);
 
             const length = parseInt(bencodedString.substring(position, colon));
+            const a = new Uint8Array(Buffer.from(bencodedString, "binary"));
+            const outS = Buffer.from(
 
+              a.slice(colon + 1, colon + 1 + length),
+        
+            ).toString("binary");
             const str = bencodedString.substring(colon + 1, colon + length + 1);
 
             position = colon + length + 1;
