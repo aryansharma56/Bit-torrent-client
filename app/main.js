@@ -190,9 +190,9 @@ function printTorrentInfo(torrentInfo,bencodedInfoValue) {
 
   const fileLength = torrentInfo.info.length;
 
-  // console.log(`Tracker URL: ${trackerUrl}`);
+  console.log(`Tracker URL: ${trackerUrl}`);
 
-  // console.log(`Length: ${fileLength}`);
+  console.log(`Length: ${fileLength}`);
   console.log(`Info Hash: ${bencodedInfoValue}`);
 
 }
