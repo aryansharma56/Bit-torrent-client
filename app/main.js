@@ -248,7 +248,8 @@ async function  main() {
    const decodedValue=decodeBencode(bencodedValue);
    const bencodedInfoValue=bencode(decodedValue.info)
   //  console.log(bencodedInfoValue);
-   const sha=findSHA(bencodedInfoValue);
+  const tmpBuff = Buffer.from(bencodedInfoValue, "binary");
+   const sha=findSHA(tmpBuff);
    printTorrentInfo(decodedValue,sha);
   
   }
