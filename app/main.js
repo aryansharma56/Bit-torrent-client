@@ -108,6 +108,7 @@ const fs = require('fs');
 const path = require('path');
 const util = require("util");
 const crypto= require('crypto')
+const axios=require('axios')
 function decodeBencode(bencodedString) {
 
     let position = 0;
@@ -241,6 +242,45 @@ function bencode(input)
     
   // return bencodedString;
 }
+function customEncodeHexString(hexString) {
+  const binaryHash = Buffer.from(hexString, 'hex');
+
+    const urlEncodedHash = [...binaryHash]
+
+      .map(byte => {
+
+        const char = String.fromCharCode(byte);
+
+        return /[A-Za-z0-9-._~]/.test(char) ? char : '%' + byte.toString(16).padStart(2, '0').toLowerCase();
+
+      })
+
+      .join('');
+    return urlEncodedHash;
+  // let result = '';
+  // for (let i = 0; i < hexString.length; i += 2) {
+  //     let hexByte = hexString.slice(i, i + 2);
+  //     result += '%' + hexByte;
+  // }
+  // return result;
+}
+const hexToByte = (hex) => {
+  const key = '0123456789abcdef'
+  let newBytes = []
+  let currentChar = 0
+  let currentByte = 0
+  for (let i=0; i<hex.length; i++) {   // Go over two 4-bit hex chars to convert into one 8-bit byte
+    currentChar = key.indexOf(hex[i])
+    if (i%2===0) { // First hex char
+      currentByte = (currentChar << 4) // Get 4-bits from first hex char
+    }
+    if (i%2===1) { // Second hex char
+      currentByte += (currentChar)     // Concat 4-bits from second hex char
+      newBytes.push(currentByte)       // Add byte
+    }
+  }
+  return new Uint8Array(newBytes)
+}
 async function  main() {
   const command = process.argv[2];
 
@@ -269,6 +309,91 @@ async function  main() {
    printTorrentInfo(decodedValue,sha);
   
   }
+  else if(command==="peers")
+  {
+    const fileName = process.argv[3];
+    const filePath = path.resolve(__dirname,"..", fileName);
+    const bencodedValue= fs.readFileSync(path.resolve('.', fileName));
+   //  console.log(bencodedValue);
+    const decodedValue=decodeBencode(bencodedValue.toString("binary"));
+    // console.log(decodedValue.info);
+    const bencodedInfoValue=bencode(decodedValue.info)
+   //  console.log(bencodedInfoValue);
+   const tmpBuff = Buffer.from(bencodedInfoValue, "binary");
+   const sha=findSHA(tmpBuff);
+   const encodedSha=customEncodeHexString(sha);
+    // console.log("info hash is",encodedSha);
+     axios.get(`${decodedValue.announce}?info_hash=${encodedSha}`, {
+       
+         params: {
+        //This is one of the many options we can configure
+         peer_id:"00112233445566778899",
+         port: 6881,
+         uploaded: 0,
+         downloaded:0,
+         left:decodedValue.info.length,
+         compact:1
+         }
+      }).then((res)=>{
+        const result=res.data;
+        // const data=Buffer.from(result,'binary');
+        const decodedValue=decodeBencode(res.data);
+        // console.log(decodedValue)
+        const peersBuffer= Buffer.from(decodedValue.peers,'binary')
+        // console.log(hexToByte(bufferedValue.toString('hex')))
+        // for(let i of bufferedValue)
+        // {
+        //   console.log(i.toString('hex'));
+        // }
+        const peerList = []
+
+    for (let i = 0; i < peersBuffer.length; i += 6) {
+
+      let ip;
+
+      ip =
+
+        peersBuffer[i] +
+
+        "." +
+
+        peersBuffer[i + 1] +
+
+        "." +
+
+        peersBuffer[i + 2] +
+
+        "." +
+
+        peersBuffer[i + 3] +
+
+        ":";
+
+      const portNumber = peersBuffer[i + 4] * 256 + peersBuffer[i + 5];
+
+      ip = ip + portNumber;
+
+      peerList.push(ip);
+
+    }
+
+    for (let i = 0; i < peerList.length; i++) {
+
+      console.log(peerList[i]);
+
+    }
+        // console.log(bufferedValue);
+
+
+      }).catch((err)=>{
+        console.log(err);
+      })
+      // console.log(res.status);
+
+   }
+   
+
+  
   else {
     throw new Error(`Unknown command ${command}`);
   }
