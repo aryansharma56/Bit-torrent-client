@@ -336,10 +336,11 @@ async function  main() {
          }
       }).then((res)=>{
         const result=res.data;
+        console.log(result)
         // const data=Buffer.from(result,'binary');
-        const decodedValue=decodeBencode(res.data);
+        const decodedValue=decodeBencode(result.toString('binary'));
         // console.log(decodedValue)
-        const peersBuffer= Buffer.from(decodedValue.peers,'binary')
+        const peersBuffer= Buffer.from(decodedValue.peers.toString('binary'),'binary')
         // console.log(hexToByte(bufferedValue.toString('hex')))
         // for(let i of bufferedValue)
         // {
