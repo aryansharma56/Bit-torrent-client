@@ -4,6 +4,7 @@ const path = require('path');
 const util = require("util");
 const crypto= require('crypto')
 const axios=require('axios')
+const net= require('net')
 function decodeBencode(bencodedString) {
 
     let position = 0;
@@ -332,6 +333,35 @@ async function  main() {
       // console.log(res.status);
 
    }
+  else if(command==="handshake")
+  {
+    const file = process.argv[3];
+    const peerID = "00112233445566778899";
+    const torrentFileParsed = torrentFileParser(file);
+    const torrentObj = extractTorrentInfo(torrentFileParsed);
+    const { trackerURL, length, infoHash } = torrentObj;
+    const binaryHash = Buffer.from(infoHash, 'hex');
+    const handshake=Buffer.concat([Buffer.from([19],'binary'),Buffer.from("BitTorrent protocol",'binary'),
+      Buffer.alloc(8),binaryHash,Buffer.from(peerID,'binary')
+    ]);
+    const client = new net.Socket();
+client.connect(51498, '165.232.33.77', function() {
+	// console.log('Connected');
+	client.write(handshake);
+});
+
+client.on('data', function(data) {
+  console.log('Peer ID: ' + data.slice(-20).toString('hex'));
+  
+	// console.log('Received: ' +bufferedData );
+	client.destroy(); // kill client after server's response
+});
+
+client.on('close', function() {
+	// console.log('Connection closed');
+});
+
+  }
    
 
   
