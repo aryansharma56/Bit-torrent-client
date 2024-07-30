@@ -336,7 +336,7 @@ async function  main() {
          }
       }).then((res)=>{
         const result=res.data;
-        console.log(result)
+        // console.log(result)
         // const data=Buffer.from(result,'binary');
         const decodedValue=decodeBencode(result.toString('binary'));
         // console.log(decodedValue)
