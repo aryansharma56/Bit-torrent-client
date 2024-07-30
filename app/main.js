@@ -337,10 +337,10 @@ async function  main() {
       }).then((res)=>{
         const result=res.data;
         console.log(result.toString('binary'))
-        const data =result.arrayBuffer();
-        const bufferData=Buffer.from(data,'binary');
+        // const data =result.arrayBuffer();
+        // const bufferData=Buffer.from(result,'binary');
         // const data=Buffer.from(result,'binary');
-        const decodedValue=decodeBencode(bufferData);
+        const decodedValue=decodeBencode(result);
         console.log(decodedValue)
         const peersBuffer= Buffer.from(decodedValue.peers,'binary')
         // console.log(hexToByte(bufferedValue.toString('hex')))
