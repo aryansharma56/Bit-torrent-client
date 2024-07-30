@@ -336,6 +336,10 @@ async function  main() {
   else if(command==="handshake")
   {
     const file = process.argv[3];
+    const address=process.argv[4];
+    const index= address.indexOf(':');
+    const port=address.substring(index+1);
+    const ip=address.substring(0,index-1);
     const peerID = "00112233445566778899";
     const torrentFileParsed = torrentFileParser(file);
     const torrentObj = extractTorrentInfo(torrentFileParsed);
@@ -345,7 +349,7 @@ async function  main() {
       Buffer.alloc(8),binaryHash,Buffer.from(peerID,'binary')
     ]);
     const client = new net.Socket();
-client.connect(process.argv[5], process.argv[4], function() {
+client.connect(port, ip, function() {
 	// console.log('Connected');
 	client.write(handshake);
 });
