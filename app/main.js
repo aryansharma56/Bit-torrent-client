@@ -339,7 +339,7 @@ async function  main() {
     const address=process.argv[4];
     const index= address.indexOf(':');
     const port=address.substring(index+1);
-    const ip=address.substring(0,index-1);
+    const ip=address.substring(0,index);
     const peerID = "00112233445566778899";
     const torrentFileParsed = torrentFileParser(file);
     const torrentObj = extractTorrentInfo(torrentFileParsed);
