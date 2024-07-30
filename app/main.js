@@ -345,7 +345,7 @@ async function  main() {
       Buffer.alloc(8),binaryHash,Buffer.from(peerID,'binary')
     ]);
     const client = new net.Socket();
-client.connect(51498, '165.232.33.77', function() {
+client.connect(process.argv[5], process.argv[4], function() {
 	// console.log('Connected');
 	client.write(handshake);
 });
