@@ -338,7 +338,7 @@ async function  main() {
         const result=res.data;
         console.log(result)
         // const data=Buffer.from(result,'binary');
-        const decodedValue=decodeBencode(result);
+        const decodedValue=decodeBencode(result.toString('binary'));
         // console.log(decodedValue)
         const peersBuffer= Buffer.from(decodedValue.peers,'binary')
         // console.log(hexToByte(bufferedValue.toString('hex')))
