@@ -313,7 +313,7 @@ class Peer {
   }
 
   requestNextBlockOrComplete(blockOffset) {
-    const nextBlockOffset = blockOffse + DEFAULT_BLOCK_SIZE;
+    const nextBlockOffset = blockOffset + DEFAULT_BLOCK_SIZE;
 
     const remainingBytesInPiece = this.piece_length - nextBlockOffset;
 
