@@ -304,7 +304,7 @@ class Peer {
 
     incoming_block_offset = data.readUInt32BE(9);
 
-    const incoming_data = payload.subarray(8);
+    const incoming_data = data.subarray(13);
     this.chunks.push(incoming_data);
     fs.appendFileSync(this.output_path, incoming_data);
 
