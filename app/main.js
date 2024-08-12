@@ -381,6 +381,47 @@ async function main() {
       .catch((err) => {
         console.error(err);
       });
+  } else if (command == "download") {
+    const file = process.argv[5];
+    const output_path = process.argv[4];
+    // const pieceIndex = parseInt(process.argv[6]);
+    const peers = await getPairs(file);
+    const address = peers[1];
+    const index = address.indexOf(":");
+    const port = address.substring(index + 1);
+    const ip = address.substring(0, index);
+    const peerID = "00112233445566778899";
+    const torrentFileParsed = torrentFileParser(file);
+    const torrentObj = extractTorrentInfo(torrentFileParsed);
+    const { trackerURL, length, infoHash } = torrentObj;
+    const binaryHash = Buffer.from(infoHash, "hex");
+    const { piece_length, piece_hashes } = returnTorrentInfo(
+      torrentFileParser(file),
+      binaryHash
+    );
+    const last_piece = Math.floor(length / piece_length);
+    const last_piece_length = length % piece_length;
+    console.log(last_piece);
+    for (let i = 0; i <= last_piece; i++) {
+      const peerCommunicationHandler = new PeerCommunicationHandler(
+        peers,
+        new Uint8Array(20).map((x) => Math.round(Math.random() * 256)),
+        piece_length,
+        length,
+        binaryHash,
+        piece_hashes
+      );
+      peerCommunicationHandler
+        .downloadPieceTo(output_path, i)
+
+        .then(() => {
+          console.log(`Piece ${i} downloaded to ${output_path}`);
+        })
+
+        .catch((err) => {
+          console.error(err);
+        });
+    }
   } else {
     throw new Error(`Unknown command ${command}`);
   }
