@@ -1,4 +1,4 @@
-const fs = require("fs");
+const fs = require("fs-extra");
 const net = require("net");
 const crypto = require("crypto");
 
@@ -72,7 +72,8 @@ class Peer {
 
       socket.on("close", () => {
         const fileValS = Buffer.concat(this.chunks);
-        fs.writeFileSync(this.output_path, fileValS);
+        fs.ensureFileSync(this.output_path);
+        fs.writeFileSync(this.output_path, fileValS, { flag: "w" });
         console.log("connection closed");
       });
 
@@ -330,7 +331,7 @@ class Peer {
   }
 
   computeDownloadedFiles() {
-    const fileBuffer = fs.readFileSync(this.output_path);
+    // const fileBuffer = fs.readFileSync(this.output_path);
     const downloadedData = Buffer.concat(this.chunks);
     const hash = crypto.createHash("sha1").update(downloadedData).digest("hex");
 
