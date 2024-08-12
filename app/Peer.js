@@ -198,19 +198,22 @@ class Peer {
       this.sendMessage(this.constructMessage(2, 1));
     } else if (this.state == "interested") {
       console.log("recieved unchoke message");
-      this.state = "unchoke";
+      this.state = "piece";
       console.log("sending request message");
-      this.sendRequestMessage(payload, this.piece_index, this.piece_length);
-      // this.sendMessage(this.constructRequestMessage());
+      // this.sendRequestMessage(payload, this.piece_index, this.piece_length);
+      this.sendMessage(this.constructRequestMessage());
     } else if (this.state == "piece") {
-      this.sendRequestMessage(payload, this.piece_index, this.piece_length);
-    } else if (this.state == "request_complete") {
-      console.log("Received last block message");
-
-      this.chunks.push(payload.subarray(8));
-      this.computeDownloadedFiles();
-      this.disconnect();
+      // this.sendMessage(th);
+      this.handlePiece(data, messageLength);
+      // this.sendRequestMessage(payload, this.piece_index, this.piece_length);
     }
+    //  else if (this.state == "request_complete") {
+    //   console.log("Received last block message");
+
+    //   this.chunks.push(payload.subarray(8));
+    //   this.computeDownloadedFiles();
+    //   this.disconnect();
+    // }
   }
 
   handleRequest(id1) {
