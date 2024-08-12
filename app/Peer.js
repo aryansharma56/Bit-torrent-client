@@ -299,7 +299,7 @@ class Peer {
   handlePiece(data, messageLength) {
     const incoming_piece_index = data.readUInt32BE(5);
 
-    const incoming_block_offset = data.readUInt32BE(9);
+    const incoming_block_offset = this.offset;
 
     const incoming_data = data.subarray(13);
 
@@ -308,7 +308,7 @@ class Peer {
     console.log(
       `Downloaded block ${incoming_block_offset} of piece ${incoming_piece_index}.`
     );
-
+    this.offset += DEFAULT_BLOCK_SIZE;
     this.requestNextBlockOrComplete(incoming_block_offset);
   }
 
