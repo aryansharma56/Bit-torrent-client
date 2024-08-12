@@ -174,7 +174,7 @@ class Peer {
     //   JSON.stringify(data) + "\n******** RECEIVED *********\n"
     // );
 
-    this.buffer = Buffer.concat([this.buffer, data]);
+    // this.buffer = Buffer.concat([this.buffer, data]);
 
     this.processBuffer(data);
   }
