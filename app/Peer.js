@@ -297,22 +297,19 @@ class Peer {
   }
 
   handlePiece(data, messageLength) {
-    let incoming_block_offset;
-    console.log("finally handling pieces");
-    let payload = data.subarray(5, messageLength + 5);
-    const incoming_piece_index = this.piece_index;
+    const incoming_piece_index = data.readUInt32BE(5);
 
-    incoming_block_offset = data.readUInt32BE(9);
+    const incoming_block_offset = data.readUInt32BE(9);
 
     const incoming_data = data.subarray(13);
-    this.chunks.push(incoming_data);
+
     fs.appendFileSync(this.output_path, incoming_data);
 
     console.log(
       `Downloaded block ${incoming_block_offset} of piece ${incoming_piece_index}.`
     );
-    this.offset += DEFAULT_BLOCK_SIZE;
-    this.requestNextBlockOrComplete(this.offset);
+
+    this.requestNextBlockOrComplete(incoming_block_offset);
   }
 
   requestNextBlockOrComplete(blockOffset) {
