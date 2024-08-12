@@ -169,10 +169,10 @@ class Peer {
 
   handleData(data) {
     console.log("length of data is", data.length);
-    fs.appendFileSync(
-      `${STORAGE_PATH}PACKETS.txt`,
-      JSON.stringify(data) + "\n******** RECEIVED *********\n"
-    );
+    // fs.appendFileSync(
+    //   `${STORAGE_PATH}PACKETS.txt`,
+    //   JSON.stringify(data) + "\n******** RECEIVED *********\n"
+    // );
 
     this.buffer = Buffer.concat([this.buffer, data]);
 
@@ -359,10 +359,10 @@ class Peer {
   }
 
   sendMessage(message) {
-    fs.appendFileSync(
-      `${STORAGE_PATH}PACKETS.txt`,
-      JSON.stringify(message) + "\n******** SENT *********\n"
-    );
+    // fs.appendFileSync(
+    //   `${STORAGE_PATH}PACKETS.txt`,
+    //   JSON.stringify(message) + "\n******** SENT *********\n"
+    // );
 
     this.socket.write(message);
   }
