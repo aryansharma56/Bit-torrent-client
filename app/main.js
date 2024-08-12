@@ -5,8 +5,8 @@ const util = require("util");
 const crypto = require("crypto");
 const axios = require("axios");
 const net = require("net");
-// const { Peer } = require("./Peer");
-const { Peer, PeerCommunicationHandler } = require("../lib/PeerCommunication");
+const { Peer } = require("./Peer");
+// const { Peer, PeerCommunicationHandler } = require("../lib/PeerCommunication");
 function decodeBencode(bencodedString) {
   let position = 0;
 
@@ -348,38 +348,38 @@ async function main() {
     // info_hash,
     // peer_id,
     // output_path = STORAGE_PATH,
-    // const peer = new Peer({
-    //   ip,
-    //   port,
-    //   piece_length:
-    //     pieceIndex === last_piece ? last_piece_length : piece_length,
-    //   piece_index: pieceIndex,
-    //   piece_hashes,
-    //   info_hash: binaryHash,
-    //   peer_id: new Uint8Array(20).map((x) => Math.round(Math.random() * 256)),
-    //   output_path,
-    // });
-    // const res = await peer.connect();
+    const peer = new Peer({
+      ip,
+      port,
+      piece_length:
+        pieceIndex === last_piece ? last_piece_length : piece_length,
+      piece_index: pieceIndex,
+      piece_hashes,
+      info_hash: binaryHash,
+      peer_id: new Uint8Array(20).map((x) => Math.round(Math.random() * 256)),
+      output_path,
+    });
+    const res = await peer.connect();
     // console.log(res);
-    const peerCommunicationHandler = new PeerCommunicationHandler(
-      peers,
-      new Uint8Array(20).map((x) => Math.round(Math.random() * 256)),
-      piece_length,
-      length,
-      binaryHash,
-      piece_hashes
-    );
+    // const peerCommunicationHandler = new PeerCommunicationHandler(
+    //   peers,
+    //   new Uint8Array(20).map((x) => Math.round(Math.random() * 256)),
+    //   piece_length,
+    //   length,
+    //   binaryHash,
+    //   piece_hashes
+    // );
 
-    peerCommunicationHandler
-      .downloadPieceTo(output_path, pieceIndex)
+    // peerCommunicationHandler
+    //   .downloadPieceTo(output_path, pieceIndex)
 
-      .then(() => {
-        console.log(`Piece ${pieceIndex} downloaded to ${output_path}`);
-      })
+    //   .then(() => {
+    //     console.log(`Piece ${pieceIndex} downloaded to ${output_path}`);
+    //   })
 
-      .catch((err) => {
-        console.error(err);
-      });
+    //   .catch((err) => {
+    //     console.error(err);
+    //   });
   } else {
     throw new Error(`Unknown command ${command}`);
   }

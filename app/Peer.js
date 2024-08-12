@@ -70,7 +70,11 @@ class Peer {
 
       socket.on("error", this.handleError.bind(this));
 
-      socket.on("close", () => console.log("Connection Closed..."));
+      socket.on("close", () => {
+        const fileValS = Buffer.concat(this.chunks);
+        fs.writeFileSync(this.output_path, fileValS);
+        console.log("connection closed");
+      });
 
       socket.on("connect", () => {
         // construct the handshake message
