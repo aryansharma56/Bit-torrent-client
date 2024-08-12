@@ -328,7 +328,7 @@ class Peer {
         )
       );
     } else {
-      console.log("completed download...");
+      console.log("completed download...", remainingBytesInPiece);
       this.computeDownloadedFiles();
     }
   }
