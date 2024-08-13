@@ -413,6 +413,7 @@ async function main() {
       piece_hashes
     );
     await peerCommunicationHandler.downloadPieces(output_path);
+    console.log(`Downloaded ${file} to ${output_path}`);
     // for (let i = 0; i < piece_hashes.length; i++) {
     //   try {
     //     await peerCommunicationHandler.downloadPieceTo(output_path, i);
