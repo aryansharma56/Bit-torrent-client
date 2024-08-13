@@ -404,26 +404,27 @@ async function main() {
     console.log(last_piece);
     let finalBuffer = Buffer.alloc(0);
 
-    for (let i = 0; i < piece_hashes.length; i++) {
-      const peerCommunicationHandler = new PeerCommunicationHandler(
-        peers,
-        new Uint8Array(20).map((x) => Math.round(Math.random() * 256)),
-        piece_length,
-        length,
-        binaryHash,
-        piece_hashes
-      );
-      try {
-        await peerCommunicationHandler.downloadPieceTo(output_path, i);
-        finalBuffer = Buffer.concat([
-          finalBuffer,
-          fs.readFileSync(output_path),
-        ]);
-      } catch {
-        console.log("error while downloading");
-      }
-    }
-    fs.writeFileSync(output_path, finalBuffer);
+    const peerCommunicationHandler = new PeerCommunicationHandler(
+      peers,
+      new Uint8Array(20).map((x) => Math.round(Math.random() * 256)),
+      piece_length,
+      length,
+      binaryHash,
+      piece_hashes
+    );
+    await peerCommunicationHandler.downloadPieces(output_path);
+    // for (let i = 0; i < piece_hashes.length; i++) {
+    //   try {
+    //     await peerCommunicationHandler.downloadPieceTo(output_path, i);
+    //     finalBuffer = Buffer.concat([
+    //       finalBuffer,
+    //       fs.readFileSync(output_path),
+    //     ]);
+    //   } catch {
+    //     console.log("error while downloading");
+    //   }
+    // }
+    // fs.writeFileSync(output_path, finalBuffer);
   } else {
     throw new Error(`Unknown command ${command}`);
   }
