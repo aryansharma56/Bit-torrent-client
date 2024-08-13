@@ -403,6 +403,7 @@ async function main() {
     const last_piece_length = length % piece_length;
     console.log(last_piece);
     let finalBuffer = Buffer.alloc(0);
+
     for (let i = 0; i < piece_hashes.length; i++) {
       const peerCommunicationHandler = new PeerCommunicationHandler(
         peers,
@@ -410,21 +411,18 @@ async function main() {
         piece_length,
         length,
         binaryHash,
-        piece_hashes
+        piece_hashes,
+        socket
       );
-      peerCommunicationHandler
-        .downloadPieceTo(output_path, i)
-
-        .then(() => {
-          console.log(`Piece ${i} downloaded to ${output_path}`);
-          const fileBuffer = fs.readFileSync(output_path);
-
-          finalBuffer = Buffer.concat([finalBuffer, fileBuffer]);
-        })
-
-        .catch((err) => {
-          console.error(err);
-        });
+      try {
+        await peerCommunicationHandler.downloadPieceTo(output_path, i);
+        finalBuffer = Buffer.concat([
+          finalBuffer,
+          fs.readFileSync(output_path),
+        ]);
+      } catch {
+        console.log("error while downloading");
+      }
     }
     fs.writeFileSync(output_path, finalBuffer);
   } else {
