@@ -411,8 +411,7 @@ async function main() {
         piece_length,
         length,
         binaryHash,
-        piece_hashes,
-        socket
+        piece_hashes
       );
       try {
         await peerCommunicationHandler.downloadPieceTo(output_path, i);
