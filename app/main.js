@@ -402,7 +402,8 @@ async function main() {
     const last_piece = Math.floor(length / piece_length);
     const last_piece_length = length % piece_length;
     console.log(last_piece);
-    for (let i = 0; i <= last_piece; i++) {
+    let finalBuffer = Buffer.alloc(0);
+    for (let i = 0; i < piece_hashes.length; i++) {
       const peerCommunicationHandler = new PeerCommunicationHandler(
         peers,
         new Uint8Array(20).map((x) => Math.round(Math.random() * 256)),
@@ -416,12 +417,16 @@ async function main() {
 
         .then(() => {
           console.log(`Piece ${i} downloaded to ${output_path}`);
+          const fileBuffer = fs.readFileSync(output_path);
+
+          finalBuffer = Buffer.concat([finalBuffer, fileBuffer]);
         })
 
         .catch((err) => {
           console.error(err);
         });
     }
+    fs.writeFileSync(output_path, finalBuffer);
   } else {
     throw new Error(`Unknown command ${command}`);
   }
