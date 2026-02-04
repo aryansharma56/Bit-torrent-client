@@ -1,35 +1,213 @@
-[![progress-banner](https://backend.codecrafters.io/progress/bittorrent/32147ce1-f319-45f2-bb5f-eff7cc6b74cc)](https://app.codecrafters.io/users/codecrafters-bot?r=2qF)
+# BitTorrent Client (Node.js)
 
-This is a starting point for JavaScript solutions to the
-["Build Your Own BitTorrent" Challenge](https://app.codecrafters.io/courses/bittorrent/overview).
+A minimal BitTorrent client built from scratch in **Node.js**, implementing core BitTorrent concepts such as **bencoding**, **info hash generation**, **tracker communication**, **peer discovery**, **handshake**, and **piece-based downloading** — without using any torrent libraries.
 
-In this challenge, you’ll build a BitTorrent client that's capable of parsing a
-.torrent file and downloading a file from a peer. Along the way, we’ll learn
-about how torrent files are structured, HTTP trackers, BitTorrent’s Peer
-Protocol, pipelining and more.
+This project focuses on understanding the BitTorrent protocol at a low level.
 
-**Note**: If you're viewing this repo on GitHub, head over to
-[codecrafters.io](https://codecrafters.io) to try the challenge.
+---
 
-# Passing the first stage
+## Features
 
-The entry point for your BitTorrent implementation is in `app/main.js`. Study
-and uncomment the relevant code, and push your changes to pass the first stage:
+* 📦 **Bencode decoder & encoder**
+* 🔑 **Info hash generation (SHA-1)**
+* 📡 **Tracker communication** (compact peer list)
+* 🌍 **Peer discovery (IP:Port parsing)**
+* 🤝 **Peer handshake implementation**
+* 🧩 **Piece-wise file downloading**
+* ⬇️ Download single pieces or full files
+* 🧠 Clean separation of parsing, networking, and peer communication
 
-```sh
-git add .
-git commit -m "pass 1st stage" # any msg
-git push origin master
+---
+
+## Requirements
+
+* Node.js **v18+** (for `fetch`)
+* Internet connection
+* A valid `.torrent` file
+
+---
+
+## Installation
+
+```bash
+git clone <repo-url>
+cd <repo>
+npm install
 ```
 
-Time to move on to the next stage!
+(Uses only core Node modules + axios)
 
-# Stage 2 & beyond
+---
 
-Note: This section is for stages 2 and beyond.
+## Commands & Usage
 
-1. Ensure you have `node (21)` installed locally
-1. Run `./your_bittorrent.sh` to run your program, which is implemented in
-   `app/main.js`.
-1. Commit your changes and run `git push origin master` to submit your solution
-   to CodeCrafters. Test output will be streamed to your terminal.
+All commands are run via:
+
+```bash
+node index.js <command> [args]
+```
+
+---
+
+### 1. Decode Bencode
+
+Decodes a bencoded value and prints JSON.
+
+```bash
+node index.js decode "d3:cow3:moo4:spam4:eggse"
+```
+
+---
+
+### 2. Torrent Info
+
+Prints metadata from a `.torrent` file.
+
+```bash
+node index.js info sample.torrent
+```
+
+**Output includes:**
+
+* Tracker URL
+* File length
+* Info hash
+* Piece length
+* All piece hashes
+
+---
+
+### 3. List Peers
+
+Fetches peers from the tracker using compact mode.
+
+```bash
+node index.js peers sample.torrent
+```
+
+**Output**
+
+```
+192.168.1.5:6881
+203.0.113.10:51413
+...
+```
+
+---
+
+### 4. Peer Handshake
+
+Performs a BitTorrent handshake with a peer.
+
+```bash
+node index.js handshake sample.torrent 192.168.1.5:6881
+```
+
+**Output**
+
+```
+Peer ID: <hex-encoded-peer-id>
+```
+
+---
+
+### 5. Download a Single Piece
+
+Downloads a specific piece by index.
+
+```bash
+node index.js download_piece -o output.dat sample.torrent 3
+```
+
+✔ Validates piece hash
+✔ Writes piece to disk
+
+---
+
+### 6. Download Entire File
+
+Downloads all pieces and reconstructs the full file.
+
+```bash
+node index.js download -o output.dat sample.torrent
+```
+
+---
+
+## Project Structure
+
+```
+.
+├── index.js                     # CLI entry point
+├── lib/
+│   └── PeerCommunication.js     # Peer messaging & piece download logic
+├── utils/
+│   ├── bencode.js               # Encoder/decoder logic
+│   └── torrent.js               # Torrent parsing helpers
+```
+
+---
+
+## Core Concepts Implemented
+
+### Bencoding
+
+* Integers, strings, lists, dictionaries
+* Canonical dictionary sorting for hashing
+
+### Info Hash
+
+* SHA-1 hash of **bencoded `info` dictionary**
+* Used for tracker and peer communication
+
+### Tracker Protocol
+
+* HTTP GET with URL-encoded binary info hash
+* Compact peer list parsing (6 bytes per peer)
+
+### Peer Protocol
+
+* Handshake (`BitTorrent protocol`)
+* Peer ID exchange
+* Piece request & verification
+
+---
+
+## Design Decisions
+
+* **No torrent libraries** — protocol implemented manually
+* **Binary-safe parsing** using `Buffer`
+* **Piece verification** using SHA-1 hashes
+* Modular peer communication for scalability
+
+---
+
+## Limitations
+
+* Single-file torrents only
+* No UDP tracker support
+* No choking/unchoking strategy
+* No resume support
+* No DHT / magnet links
+
+*(All intentionally omitted to keep the core protocol clear)*
+
+---
+
+## Why This Project?
+
+This project demonstrates:
+
+* Deep understanding of BitTorrent internals
+* Binary protocols & networking
+* Cryptographic hashing
+* Systems-level problem solving
+---
+
+## Future Improvements
+
+* Parallel piece downloading
+* Multi-file torrent support
+* DHT & magnet links
+* Refactor this into a **clean CLI tool**
+* Or tighten this README for **resume/GitHub highlights** 🚀
